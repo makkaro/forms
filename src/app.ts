@@ -56,5 +56,5 @@ Form.create()
             ),
         TextAreaField
             .create('area')
-            .withLabel('I <3 Javascript :)')
+            .withLabel('I <3 Javascript :) :)')
     ).render(app);
