@@ -30,7 +30,10 @@ export class TextAreaField implements Field {
     }
 
     render(node: Node): void {
-        if (node) node.appendChild(this.$element);
+        if (node) {
+            if (this.$label) this.$label.render(node);
+            node.appendChild(this.$element);
+        }
     }
 
     static create(id: string): TextAreaField {

@@ -29,7 +29,7 @@ export class SelectField implements Field {
         return this;
     }
 
-    withOptions(...texts: string[]): SelectField {
+    withOptions(...texts: Array<string>): SelectField {
         for (let text of texts) {
             const option = document.createElement('option');
             option.text = text;
@@ -39,7 +39,10 @@ export class SelectField implements Field {
     }
 
     render(node: Node): void {
-        if (node) node.appendChild(this.$element);
+        if (node) {
+            if (this.$label) this.$label.render(node);
+            node.appendChild(this.$element);
+        }
     }
 
     static create(id: string): SelectField {

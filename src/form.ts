@@ -9,17 +9,23 @@ export class Form {
         this.$controls = new Array<Field>();
     }
 
-    get values(): Array<object> {
+    get values(): Array<any> {
         return this.$controls.map(control => {
             return {
-                field: control.id,
+                id: control.id,
                 value: control.value
-            }
+            };
         });
     }
 
-    controls(...fields: Field[]): Form {
-        this.$controls = [...fields];
+    withControls(...fields: Array<Field>): Form {
+        this.$controls = [ ...fields ];
+        return this;
+    }
+
+    onsubmit(callbackFn: Function): Form {
+        const context = this;
+        this.$element.onsubmit = callbackFn.bind(context);
         return this;
     }
 
@@ -37,5 +43,3 @@ export class Form {
         return new Form();
     }
 }
-
-//
