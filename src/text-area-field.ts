@@ -1,14 +1,13 @@
 import { Field } from './field';
 import { FieldLabel } from './field-label';
 
-export class InputField implements Field {
-    protected readonly $element: HTMLInputElement;
-    protected $label: FieldLabel;
+export class TextAreaField implements Field {
+    private readonly $element: HTMLTextAreaElement;
+    private $label: FieldLabel;
 
-    protected constructor(id: string) {
-        this.$element = document.createElement('input');
+    private constructor(id: string) {
+        this.$element = document.createElement('textarea');
         this.$element.id = id;
-        this.$element.type = 'text';
         this.$label = undefined;
     }
 
@@ -19,7 +18,7 @@ export class InputField implements Field {
         return this.$element.labels.item(0).innerText || '';
     }
     get type(): string {
-        return this.$element.type;
+        return this.$element.tagName;
     }
     get value(): string {
         return this.$element.value || '';
@@ -31,13 +30,10 @@ export class InputField implements Field {
     }
 
     render(node: Node): void {
-        if (node) {
-            if (this.$label) this.$label.render(node);
-            node.appendChild(this.$element);
-        }
+        if (node) node.appendChild(this.$element);
     }
 
-    static create(id: string): InputField {
-        return new InputField(id);
+    static create(id: string): TextAreaField {
+        return new TextAreaField(id);
     }
 }

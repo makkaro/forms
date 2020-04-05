@@ -1,11 +1,10 @@
-import { InputField } from './input-field';
 import { Field } from './field';
-import { FieldType } from './field-type';
+import { InputField } from './input-field';
 
 export class DateField extends InputField implements Field {
     private constructor(id: string) {
         super(id);
-        this.$element.type = FieldType.DATE;
+        this.$element.type = 'date';
     }
 
     static create(id: string): DateField {

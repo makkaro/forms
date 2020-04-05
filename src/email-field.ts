@@ -1,11 +1,10 @@
-import { InputField } from './input-field';
 import { Field } from './field';
-import { FieldType } from './field-type';
+import { InputField } from './input-field';
 
 export class EmailField extends InputField implements Field {
     private constructor(id: string) {
         super(id);
-        this.$element.type = FieldType.EMAIL;
+        this.$element.type = 'email';
     }
 
     static create(id: string): EmailField {
