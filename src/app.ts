@@ -4,33 +4,57 @@ import { EmailField } from './email-field';
 import { InputField } from './input-field';
 import { SelectField } from './select-field';
 import { TextAreaField } from './text-area-field';
+import { Form } from './form';
 
 const app = document.getElementById('app');
 
-InputField.create('msg')
-    .withLabel('Hello, Web!')
-    .render(app);
+const msg = InputField
+    .create('msg')
+    .withLabel('Hello, Web!');
 
-DateField.create('date')
-    .withLabel('date')
-    .render(app);
+const date = DateField
+    .create('date')
+    .withLabel('date');
 
-EmailField.create('email')
-    .withLabel('email')
-    .render(app);
+const email = EmailField
+    .create('email')
+    .withLabel('email');
 
-CheckboxField.create('checkbox')
-    .withLabel('check')
-    .render(app);
+const checkbox = CheckboxField
+    .create('checkbox')
+    .withLabel('check');
 
-TextAreaField.create('textarea')
-    .withLabel('textarea')
-    .render(app);
+const textarea = TextAreaField
+    .create('textarea')
+    .withLabel('textarea');
 
-SelectField.create('select')
+const select = SelectField
+    .create('select')
     .withLabel('select')
     .withOptions(
         'option 1',
         'option 2',
         'option 3'
+    );
+
+
+Form.create()
+    .controls(
+        msg,
+        date,
+        email,
+        checkbox,
+        textarea,
+        select,
+        SelectField
+            .create('select2')
+            .withLabel('select2')
+            .withOptions(
+                'option 4',
+                'option 5',
+                'option 6'
+            ),
+        TextAreaField
+            .create('area')
+            .withLabel('I <3 Javascript :)')
     ).render(app);

@@ -24,7 +24,7 @@ export class TextAreaField implements Field {
         return this.$element.value || '';
     }
 
-    withLabel(innerText: string): Field {
+    withLabel(innerText: string): TextAreaField {
         this.$label = FieldLabel.create(this.id, innerText);
         return this;
     }
