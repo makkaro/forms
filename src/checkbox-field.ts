@@ -1,17 +1,15 @@
-import { Field } from './field';
 import { InputField } from './input-field';
+import { InputType } from './input-type';
 
-export class CheckboxField extends InputField implements Field {
-    private constructor(id: string) {
+class CheckboxField extends InputField {
+    constructor(id: string) {
         super(id);
-        this.$element.type = 'checkbox';
+        this.$element.type = InputType.CHECKBOX;
     }
 
     get value(): string {
         return this.$element.checked ? 'checked' : 'unchecked';
     }
-
-    static create(id: string): CheckboxField {
-        return new CheckboxField(id);
-    }
 }
+
+export { CheckboxField };

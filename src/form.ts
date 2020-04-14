@@ -1,45 +1,34 @@
+import { TagName } from './tag-name';
 import { Field } from './field';
+import { Wrapper } from './wrapper';
 
-export class Form {
-    private readonly $element: HTMLFormElement;
-    private $controls: Array<Field>;
+class Form extends Wrapper {
+    protected $element: HTMLFormElement;
 
-    private constructor() {
-        this.$element = document.createElement('form');
-        this.$controls = new Array<Field>();
+    constructor() {
+        super(TagName.FORM);
     }
 
-    get values(): Array<any> {
-        return this.$controls.map(control => {
-            return {
-                id: control.id,
-                value: control.value
-            };
-        });
-    }
+    get controls(): ControlsList {
+        return {
+            add: add.bind(this)
+        };
 
-    withControls(...fields: Array<Field>): Form {
-        this.$controls = [ ...fields ];
-        return this;
-    }
-
-    onsubmit(callbackFn: Function): Form {
-        const context = this;
-        this.$element.onsubmit = callbackFn.bind(context);
-        return this;
-    }
-
-    render(node: Node): void {
-        if (node) {
-            this.$controls.forEach(control => control.render(this.$element));
-            const btn = document.createElement('input');
-            btn.type = 'submit';
-            this.$element.appendChild(btn);
-            node.appendChild(this.$element);
+        function add(...controls: Array<Field>): any {
+            controls.forEach(control => {
+                control.render(this['$element']);
+            });
+            return this;
         }
     }
 
-    static create(): Form {
-        return new Form();
+    render(node: Node): void {
+        if (node) node.appendChild(this.$element);
     }
 }
+
+interface ControlsList {
+    add(...controls: Array<Field>): any;
+}
+
+export { Form };

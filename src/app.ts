@@ -1,11 +1,13 @@
-export class App {
+class App {
     private readonly $root: Node;
 
-    constructor(id: string) {
-        this.$root = document.getElementById(id);
+    constructor(node: Node) {
+        this.$root = node;
     }
 
-    render(template: string): void {
-        (this.$root as HTMLElement).innerHTML += template;
+    renderHTML(template: string) {
+        (this.$root as HTMLElement).innerHTML = template;
     }
 }
+
+export { App };

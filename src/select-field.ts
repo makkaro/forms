@@ -1,51 +1,37 @@
 import { Field } from './field';
-import { FieldLabel } from './field-label';
+import { TagName } from './tag-name';
 
-export class SelectField implements Field {
-    private readonly $element: HTMLSelectElement;
-    private $label: FieldLabel;
+class SelectField extends Field {
+    protected readonly $element: HTMLSelectElement;
 
-    private constructor(id: string) {
-        this.$element = document.createElement('select');
-        this.$element.id = id;
-        this.$label = undefined;
+    constructor(id: string) {
+        super(TagName.SELECT, id);
     }
 
-    get id(): string {
-        return this.$element.id;
-    }
-    get label(): string {
-        return this.$element.labels.item(0).innerText || '';
-    }
-    get type(): string {
-        return this.$element.tagName;
-    }
     get value(): string {
         return this.$element.value;
     }
 
-    withLabel(innerText: string): SelectField {
-        this.$label = FieldLabel.create(this.id, innerText);
-        return this;
-    }
-
-    withOptions(...texts: Array<string>): SelectField {
-        for (let text of texts) {
-            const option = document.createElement('option');
-            option.text = text;
-            this.$element.appendChild(option);
+    get options(): OptionsList {
+        return {
+            add: add.bind(this),
         }
-        return this;
-    }
 
-    render(node: Node): void {
-        if (node) {
-            if (this.$label) this.$label.render(node);
-            node.appendChild(this.$element);
+        function add(...optionsTexts: Array<string>): any {
+            this['$element'].append(
+                ...optionsTexts.map(optionsText => {
+                    const option = document.createElement(TagName.OPTION);
+                    option.text = optionsText;
+                    return option;
+                })
+            );
+            return this;
         }
-    }
-
-    static create(id: string): SelectField {
-        return new SelectField(id);
     }
 }
+
+interface OptionsList {
+    add(...options: Array<string>): any;
+}
+
+export { SelectField };

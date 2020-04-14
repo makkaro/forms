@@ -1,43 +1,16 @@
 import { Field } from './field';
-import { FieldLabel } from './field-label';
+import { TagName } from './tag-name';
 
-export class InputField implements Field {
+abstract class InputField extends Field {
     protected readonly $element: HTMLInputElement;
-    protected $label: FieldLabel;
 
     protected constructor(id: string) {
-        this.$element = document.createElement('input');
-        this.$element.id = id;
-        this.$element.type = 'text';
-        this.$label = undefined;
+        super(TagName.INPUT, id);
     }
 
-    get id(): string {
-        return this.$element.id;
-    }
-    get label(): string {
-        return this.$element.labels.item(0).innerText || '';
-    }
-    get type(): string {
-        return this.$element.type;
-    }
     get value(): string {
-        return this.$element.value || '';
-    }
-
-    withLabel(innerText: string): Field {
-        this.$label = FieldLabel.create(this.id, innerText);
-        return this;
-    }
-
-    render(node: Node): void {
-        if (node) {
-            if (this.$label) this.$label.render(node);
-            node.appendChild(this.$element);
-        }
-    }
-
-    static create(id: string): InputField {
-        return new InputField(id);
+        return this.$element.value;
     }
 }
+
+export { InputField };
