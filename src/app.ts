@@ -1,13 +1,5 @@
-class App {
-    private readonly $root: Node;
-
-    constructor(node: Node) {
-        this.$root = node;
-    }
-
-    renderHTML(template: string) {
-        (this.$root as HTMLElement).innerHTML = template;
+export class App {
+    public static getDefaultRenderingContext(): Element {
+        return document.getElementById('content');
     }
 }
-
-export { App };
