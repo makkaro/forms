@@ -1,6 +1,7 @@
 import { DocumentList } from './views/document-list';
-import { Form } from './views/form';
+import { Document } from './views/document';
 import { Router } from './router';
+import { Form } from './views/form';
 
 (function main(): void {
     document.addEventListener('DOMContentLoaded', event => {
@@ -9,8 +10,8 @@ import { Router } from './router';
         if (url.includes('document-list')) {
             new DocumentList().render();
         }
-        else if (url.includes('edit-document')) {
-            new Form(Router.getParam('formId'), Router.getParam('id')).render();
+        else if (url.includes('new-form')) {
+            new Form().render();
         }
     });
 })();

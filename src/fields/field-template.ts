@@ -32,12 +32,13 @@ export abstract class FieldTemplate implements Field {
 
     public abstract getValue(): boolean | string;
 
-    public render(context: Element = null): void {
+    public render(context: Element = null): Field {
         if (!context) {
             context = App.getDefaultRenderingContext();
         }
         const container = $('div', {}, context);
         container.append(this.$element, this.$label);
+        return this;
     }
 
 }

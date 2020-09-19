@@ -7,5 +7,5 @@ export interface Field {
     readonly options?: Array<string>;
 
     getValue(): boolean | string;
-    render(context: Element): void;
+    render(context: Element): Field;
 }

@@ -1,51 +1,45 @@
 import { $ } from '../utilities';
 import { App } from '../app';
-import { CheckboxField } from '../fields/checkbox-field';
-import { DateField } from '../fields/date-field';
-import { EmailField } from '../fields/email-field';
 import { Field } from '../fields/field';
-import { FieldType } from '../fields/field-type';
 import { LocalStorage } from '../storage/local-storage';
 import { SelectField } from '../fields/select-field';
+import { FieldType } from '../fields/field-type';
 import { TextField } from '../fields/text-field';
-import { TextAreaField } from '../fields/textarea-field';
 
 export class Form {
-    private readonly $element: HTMLFormElement;
     private readonly $fields: Array<Field>;
-    private readonly $formId: string;
-    private readonly $documentId: string;
+    private readonly $id: string;
 
-    public constructor(formId: string, documentId: string = null) {
-        const document = documentId
-            ? LocalStorage.load(documentId)
-            : null;
-        this.$fields = Form.getFieldsFromJsonObjects(LocalStorage.load(formId), document);
+    public constructor(id: string = null) {
+        this.$id = id;
 
-        this.$element = $('form', {
-            onsubmit: event => event.preventDefault()
-        }) as HTMLFormElement;
-        this.$fields.forEach(field => {
-            field.render(this.$element);
-        });
-
-        this.$formId = formId;
-        this.$documentId = documentId || null;
-    }
-
-    public getValue(): any {
-        const value = {
-            formId: this.$formId
-        };
-        this.$fields.forEach(field => {
-            value[field.id] = field.getValue();
-        });
-        return value;
+        this.$fields = id
+            ? App.getFieldsFromJsonObjects(LocalStorage.load(id))
+            : new Array<Field>();
     }
 
     public render(context: Element = null): void {
         context = context || App.getDefaultRenderingContext();
-        context.append(this.$element);
+        context.innerHTML = '';
+
+        const typeSelect = new SelectField('select type', FieldType.TEXT,
+            FieldType.CHECKBOX,
+            FieldType.DATE,
+            FieldType.EMAIL,
+            FieldType.SELECT,
+            FieldType.TEXT,
+            FieldType.TEXTAREA
+            ).render(context);
+        $('button', {
+            innerText: 'new field',
+            onclick: () => this.fieldConfig(typeSelect.value)
+        }, context);
+
+        const form = $('form', {
+            onsubmit: event => event.preventDefault()
+        }, context);
+        this.$fields.forEach(field => field.render(form));
+
         $('button', {
             innerText: 'save',
             onclick: event => this.save(event)
@@ -56,29 +50,49 @@ export class Form {
         }, context);
     }
 
-    private static getFieldsFromJsonObjects(objects: Array<object>, document: object = null): Array<Field> {
-        return objects.map(object => {
-            const template = object as Field;
-            switch (template.type) {
-                case FieldType.CHECKBOX:
-                    return new CheckboxField(template.label, document[template.id] || template.value);
-                case FieldType.DATE:
-                    return new DateField(template.label, document[template.id] || template.value, template.placeholder);
-                case FieldType.EMAIL:
-                    return new EmailField(template.label, document[template.id] || template.value, template.placeholder);
-                case FieldType.SELECT:
-                    return new SelectField(template.label, document[template.id] || template.value, ...template.options);
-                case FieldType.TEXT:
-                    return new TextField(template.label, document[template.id] || template.value, template.placeholder);
-                case FieldType.TEXTAREA:
-                    return new TextAreaField(template.label, document[template.id] || template.value);
+    private fieldConfig(type: string, context: Element = null) {
+        context = context || App.getDefaultRenderingContext();
+        context.innerHTML = '';
+
+        const hasArgPlaceholder = type == FieldType.DATE || type == FieldType.EMAIL || type == FieldType.TEXT;
+        const hasArgOptions = type == FieldType.SELECT;
+
+        const label = new TextField('label').render(context);
+        const value = new TextField('value').render(context);
+        if (hasArgPlaceholder) {
+            var placeholder = new TextField('placeholder').render(context);
+        }
+        if (hasArgOptions) {
+            var options = new TextField('options').render(context);
+        }
+
+        $('button', {
+            innerText: 'save',
+            onclick: () => {
+                const fieldType = App.getFieldType(type);
+                if (hasArgPlaceholder) {
+                    this.$fields.push(new fieldType(label.value, value.value, placeholder.value));
+                }
+                else if (hasArgOptions) {
+                    this.$fields.push(new fieldType(label.value, value.value, options.value.split(';')));
+                }
+                else {
+                    this.$fields.push(new fieldType(label.value, value.value));
+                }
+                this.render(context);
             }
-        });
+        }, context);
+        $('button', {
+            innerText: 'cancel',
+            onclick: () => {
+                this.render(context);
+            }
+        }, context)
     }
 
-    private save(event: MouseEvent) {
+    private save(event: MouseEvent): void {
         event.preventDefault();
-        LocalStorage.saveDocument(this.getValue(), this.$documentId);
-        window.location.href = '/index.html';
+        LocalStorage.saveForm(this.$fields, this.$id);
+        window.location.href = 'index.html';
     }
 }

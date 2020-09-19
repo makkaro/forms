@@ -2,45 +2,44 @@ import { $ } from '../utilities';
 import { App } from '../app';
 import { LocalStorage } from '../storage/local-storage';
 
-export class DocumentList {
-    private $documentIdentifiers: Array<string>;
+export class FormList {
+    private $formIdentifiers: Array<string>;
 
     public constructor() {
-        this.getDocumentList();
+        this.getFormList();
     }
 
-    public getDocument(id: string): any {
+    public getForm(id: string): any {
         return LocalStorage.load(id);
     }
 
-    public getDocumentList(): Array<string> {
-        return this.$documentIdentifiers = LocalStorage.getDocuments();
+    public getFormList(): Array<string> {
+        return this.$formIdentifiers = LocalStorage.getForms();
     }
 
-    public removeDocument(id: string): void {
+    public removeForm(id: string): void {
         LocalStorage.remove(id);
-        this.getDocumentList();
+        this.getFormList();
         window.location.reload();
     }
 
     public render(context: Element = null): void {
         const table = $('table');
-        this.$documentIdentifiers.forEach(id => {
+        this.$formIdentifiers.forEach(id => {
             const row = $('tr', { }, table);
             const edit = $('td', { }, row);
             $('a', {
                 innerText: id,
-                href: `edit-document.html?id=${id}&formId=${this.getDocument(id).formId}`
+                href: `edit-form.html?id=${this.getForm(id).formId}`
             }, edit);
             const remove = $('td', { }, row);
             $('a', {
                 innerText: 'delete',
                 href: '#',
-                onclick: () => this.removeDocument(id)
+                onclick: () => this.removeForm(id)
             }, remove);
         });
         context = context || App.getDefaultRenderingContext();
         context.append(table);
-        context.append($('p', {innerText: 'chuj'}))
     }
 }
