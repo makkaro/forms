@@ -14,7 +14,7 @@ export class CheckboxField extends TextField {
         return FieldType.CHECKBOX;
     }
 
-    public getValue(): boolean | string {
-        return this.$element.checked;
+    public get value(): string {
+        return String(this.$element.checked);
     }
 }

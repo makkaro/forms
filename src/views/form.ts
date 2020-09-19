@@ -46,8 +46,16 @@ export class Form {
         }, context);
         $('button', {
             innerText: 'cancel',
-            onclick: () => window.location.href = '/index.html'
+            onclick: () => window.location.href = 'index.html'
         }, context);
+    }
+
+    public getValue(): any {
+        const value = new Array<object>();
+        this.$fields.forEach(field => {
+            value.push(field.getValue())
+        });
+        return value;
     }
 
     private fieldConfig(type: string, context: Element = null) {
@@ -74,7 +82,7 @@ export class Form {
                     this.$fields.push(new fieldType(label.value, value.value, placeholder.value));
                 }
                 else if (hasArgOptions) {
-                    this.$fields.push(new fieldType(label.value, value.value, options.value.split(';')));
+                    this.$fields.push(new fieldType(label.value, value.value, ...options.value.split(';')));
                 }
                 else {
                     this.$fields.push(new fieldType(label.value, value.value));
@@ -92,7 +100,7 @@ export class Form {
 
     private save(event: MouseEvent): void {
         event.preventDefault();
-        LocalStorage.saveForm(this.$fields, this.$id);
+        LocalStorage.saveForm(this.getValue(), this.$id);
         window.location.href = 'index.html';
     }
 }

@@ -13,23 +13,27 @@ export class App {
     }
 
     public static getFieldsFromJsonObjects(jsonObjects: Array<object>, document: object = null): Array<Field> {
-        return jsonObjects.map(object => {
+        console.log(jsonObjects);
+        console.log(document);
+        const x = jsonObjects.map(object => {
             const { type, label, id, value, placeholder, options } = object as Field;
             switch (type) {
                 case FieldType.CHECKBOX:
-                    return new CheckboxField(label, document[id] || value);
+                    return new CheckboxField(label, document ? document['values'].shift() : value);
                 case FieldType.DATE:
-                    return new DateField(label, document[id] || value, placeholder);
+                    return new DateField(label, document ? document['values'].shift() : value, placeholder);
                 case FieldType.EMAIL:
-                    return new EmailField(label, document[id] || value, placeholder);
+                    return new EmailField(label, document ? document['values'].shift() : value, placeholder);
                 case FieldType.SELECT:
-                    return new SelectField(label, document[id] || value, ...options);
+                    return new SelectField(label, document ? document['values'].shift() : value, ...options);
                 case FieldType.TEXT:
-                    return new TextField(label, document[id] || value, placeholder);
+                    return new TextField(label, document ? document['values'].shift() : value, placeholder);
                 case FieldType.TEXTAREA:
-                    return new TextAreaField(label, document[id] || value);
+                    return new TextAreaField(label, document ? document['values'].shift() : value);
             }
         });
+        console.log(x);
+        return x;
     }
 
     public static getFieldType(type: string): any {

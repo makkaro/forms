@@ -13,17 +13,15 @@ export class Document {
         this.$id = id;
 
         const template = id ? LocalStorage.load(id) : null;
+        console.log(template);
         this.$fields = App.getFieldsFromJsonObjects(LocalStorage.load(formId), template);
     }
 
-    public getValue(): any {
-        const value = {
-            formId: this.$formId
+    public getValue(): object {
+        return {
+            formId: this.$formId,
+            values: this.$fields.map(field => field.value)
         };
-        this.$fields.forEach(field => {
-            value[field.id] = field.getValue();
-        });
-        return value;
     }
 
     public render(context: Element = null): void {
@@ -40,13 +38,14 @@ export class Document {
         }, context);
         $('button', {
             innerText: 'cancel',
-            onclick: () => window.location.href = '/index.html'
+            onclick: () => window.location.href = 'index.html'
         }, context);
     }
 
     private save(event: MouseEvent) {
+        console.log(this.getValue());
         event.preventDefault();
         LocalStorage.saveDocument(this.getValue(), this.$id);
-        window.location.href = '/index.html';
+        window.location.href = 'index.html';
     }
 }

@@ -27,11 +27,11 @@ export class FormList {
         const table = $('table');
         this.$formIdentifiers.forEach(id => {
             const row = $('tr', { }, table);
-            const edit = $('td', { }, row);
+            const fill = $('td', { }, row);
             $('a', {
                 innerText: id,
-                href: `edit-form.html?id=${this.getForm(id).formId}`
-            }, edit);
+                href: `new-document.html?formId=${id}`
+            }, fill);
             const remove = $('td', { }, row);
             $('a', {
                 innerText: 'delete',

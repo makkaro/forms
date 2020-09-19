@@ -12,10 +12,7 @@ export class SelectField extends FieldTemplate {
                 innerText: text
             }, this.$element);
         });
-    }
-
-    public get options(): Array<string> {
-        return Array.from(this.$element.options).map(option => option.innerText);
+        if (value) this.$element.selectedIndex = options.indexOf(value);
     }
 
     public get type(): string {
@@ -23,10 +20,17 @@ export class SelectField extends FieldTemplate {
     }
 
     public get value(): string {
-        return this.getValue();
+        return this.$element.value;
     }
 
-    public getValue(): string {
-        return this.$element.value;
+    public get options(): Array<string> {
+        return Array.from(this.$element.options).map(option => option.innerText);
+    }
+
+    public getValue(): object {
+        return {
+            ...super.getValue(),
+            options: this.options
+        };
     }
 }

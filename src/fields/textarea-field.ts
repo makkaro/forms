@@ -14,10 +14,6 @@ export class TextAreaField extends FieldTemplate {
     }
 
     public get value(): string {
-        return this.getValue();
-    }
-
-    public getValue(): string {
         return this.$element.value;
     }
 }

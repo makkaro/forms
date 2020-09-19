@@ -10,19 +10,22 @@ export class TextField extends FieldTemplate {
         if (placeholder) this.$element.placeholder = placeholder;
     }
 
-    public get placeholder(): string {
-        return this.$element.placeholder;
-    }
-
     public get type(): string {
         return FieldType.TEXT;
     }
 
     public get value(): string {
-        return String(this.getValue());
+        return this.$element.value;
     }
 
-    public getValue(): boolean | string {
-        return this.$element.value;
+    public get placeholder(): string {
+        return this.$element.placeholder;
+    }
+
+    public getValue(): object {
+        return {
+            ...super.getValue(),
+            placeholder: this.placeholder
+        };
     }
 }

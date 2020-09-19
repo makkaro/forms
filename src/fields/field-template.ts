@@ -8,14 +8,15 @@ export abstract class FieldTemplate implements Field {
 
     protected constructor(tagName: string, label: string = null) {
         this.$element = $(tagName, {
-            id: `${ tagName }-${ Date.now().toString() }`
+            id: `${ tagName }-${String(Date.now())}`
         });
-        if (label) {
-            this.$label = $('label', {
-                htmlFor: this.$element.id,
-                innerText: label
-            }) as HTMLLabelElement;
-        }
+
+        if (!label) return;
+
+        this.$label = $('label', {
+            htmlFor: this.$element.id,
+            innerText: label
+        }) as HTMLLabelElement;
     }
 
     public get id(): string {
@@ -30,15 +31,22 @@ export abstract class FieldTemplate implements Field {
 
     public abstract get value(): string;
 
-    public abstract getValue(): boolean | string;
-
-    public render(context: Element = null): Field {
-        if (!context) {
-            context = App.getDefaultRenderingContext();
-        }
-        const container = $('div', {}, context);
-        container.append(this.$element, this.$label);
-        return this;
+    public getValue(): object {
+        return {
+            id: this.id,
+            label: this.label,
+            type: this.type,
+            value: this.value
+        };
     }
 
+    public render(context: Element = null): Field {
+        context = context || App.getDefaultRenderingContext();
+
+        const container = $('div');
+        container.append(this.$element, this.$label);
+        context.append(container);
+
+        return this;
+    }
 }

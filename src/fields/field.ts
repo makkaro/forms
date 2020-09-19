@@ -6,6 +6,6 @@ export interface Field {
     readonly placeholder?: string;
     readonly options?: Array<string>;
 
-    getValue(): boolean | string;
-    render(context: Element): Field;
+    getValue(): object;
+    render(context?: Element): Field;
 }
