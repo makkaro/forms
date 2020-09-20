@@ -9,20 +9,6 @@ export class DocumentList {
         this.getDocumentList();
     }
 
-    public getDocument(id: string): any {
-        return LocalStorage.load(id);
-    }
-
-    public getDocumentList(): Array<string> {
-        return this.$documentIdentifiers = LocalStorage.getDocuments();
-    }
-
-    public removeDocument(id: string): void {
-        LocalStorage.remove(id);
-        this.getDocumentList();
-        window.location.reload();
-    }
-
     public render(context: Element = null): void {
         const table = $('table');
         this.$documentIdentifiers.forEach(id => {
@@ -30,7 +16,7 @@ export class DocumentList {
             const edit = $('td', { }, row);
             $('a', {
                 innerText: id,
-                href: `edit-document.html?id=${id}&formId=${this.getDocument(id).formId}`
+                href: `edit-document.html?id=${id}&formId=${DocumentList.getDocument(id).formId}`
             }, edit);
             const remove = $('td', { }, row);
             $('a', {
@@ -41,5 +27,19 @@ export class DocumentList {
         });
         context = context || App.getDefaultRenderingContext();
         context.append(table);
+    }
+
+    private static getDocument(id: string): any {
+        return LocalStorage.load(id);
+    }
+
+    private getDocumentList(): Array<string> {
+        return this.$documentIdentifiers = LocalStorage.getDocuments();
+    }
+
+    private removeDocument(id: string): void {
+        LocalStorage.remove(id);
+        this.getDocumentList();
+        window.location.reload();
     }
 }

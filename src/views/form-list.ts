@@ -9,20 +9,6 @@ export class FormList {
         this.getFormList();
     }
 
-    public getForm(id: string): any {
-        return LocalStorage.load(id);
-    }
-
-    public getFormList(): Array<string> {
-        return this.$formIdentifiers = LocalStorage.getForms();
-    }
-
-    public removeForm(id: string): void {
-        LocalStorage.remove(id);
-        this.getFormList();
-        window.location.reload();
-    }
-
     public render(context: Element = null): void {
         const table = $('table');
         this.$formIdentifiers.forEach(id => {
@@ -41,5 +27,19 @@ export class FormList {
         });
         context = context || App.getDefaultRenderingContext();
         context.append(table);
+    }
+
+    private static getForm(id: string): any {
+        return LocalStorage.load(id);
+    }
+
+    private getFormList(): Array<string> {
+        return this.$formIdentifiers = LocalStorage.getForms();
+    }
+
+    private removeForm(id: string): void {
+        LocalStorage.remove(id);
+        this.getFormList();
+        window.location.reload();
     }
 }

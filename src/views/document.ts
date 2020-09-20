@@ -32,14 +32,21 @@ export class Document {
         }, context);
         this.$fields.forEach(field => field.render(form));
 
-        $('button', {
+        const nav = $('ul', { }, context);
+
+        const save = $('li', { }, nav);
+        $('a', {
             innerText: 'save',
+            href: '#',
             onclick: event => this.save(event)
-        }, context);
-        $('button', {
+        }, save);
+
+        const cancel = $('li', { }, nav);
+        $('a', {
             innerText: 'cancel',
+            href: '#',
             onclick: () => window.location.href = 'index.html'
-        }, context);
+        }, cancel);
     }
 
     private save(event: MouseEvent) {

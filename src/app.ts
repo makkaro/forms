@@ -37,7 +37,7 @@ export class App {
             const fieldConstructor = this.getFieldConstructor(type);
             const newValue = values ? values.shift() : value;
 
-            const args = [ label, newValue ]
+            const args = [ label, newValue ];
             if (this.hasArgOptions(type)) args.push(...options);
             if (this.hasArgPlaceholder(type)) args.push(placeholder);
 
