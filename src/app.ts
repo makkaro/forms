@@ -1,8 +1,8 @@
-import { Field } from './fields/field';
-import { FieldType } from './fields/field-type';
 import { CheckboxField } from './fields/checkbox-field';
 import { DateField } from './fields/date-field';
 import { EmailField } from './fields/email-field';
+import { Field } from './fields/field';
+import { FieldType } from './fields/field-type';
 import { SelectField } from './fields/select-field';
 import { TextField } from './fields/text-field';
 import { TextAreaField } from './fields/textarea-field';
@@ -12,31 +12,7 @@ export class App {
         return document.getElementById('content');
     }
 
-    public static getFieldsFromJsonObjects(jsonObjects: Array<object>, document: object = null): Array<Field> {
-        console.log(jsonObjects);
-        console.log(document);
-        const x = jsonObjects.map(object => {
-            const { type, label, id, value, placeholder, options } = object as Field;
-            switch (type) {
-                case FieldType.CHECKBOX:
-                    return new CheckboxField(label, document ? document['values'].shift() : value);
-                case FieldType.DATE:
-                    return new DateField(label, document ? document['values'].shift() : value, placeholder);
-                case FieldType.EMAIL:
-                    return new EmailField(label, document ? document['values'].shift() : value, placeholder);
-                case FieldType.SELECT:
-                    return new SelectField(label, document ? document['values'].shift() : value, ...options);
-                case FieldType.TEXT:
-                    return new TextField(label, document ? document['values'].shift() : value, placeholder);
-                case FieldType.TEXTAREA:
-                    return new TextAreaField(label, document ? document['values'].shift() : value);
-            }
-        });
-        console.log(x);
-        return x;
-    }
-
-    public static getFieldType(type: string): any {
+    public static getFieldConstructor(type: string): any {
         switch (type) {
             case FieldType.CHECKBOX:
                 return CheckboxField;
@@ -51,5 +27,29 @@ export class App {
             case FieldType.TEXTAREA:
                 return TextAreaField;
         }
+    }
+
+    public static getFieldsFromJsonObjects(objects: Array<object>, document: object = null): Array<Field> {
+        const values = document ? document['values'] : null;
+
+        return objects.map(object => {
+            const { label, type, value, placeholder, options } = object as Field;
+            const fieldConstructor = this.getFieldConstructor(type);
+            const newValue = values ? values.shift() : value;
+
+            const args = [ label, newValue ]
+            if (this.hasArgOptions(type)) args.push(...options);
+            if (this.hasArgPlaceholder(type)) args.push(placeholder);
+
+            return new fieldConstructor(...args);
+        });
+    }
+
+    public static hasArgOptions(type: string): boolean {
+        return type == FieldType.SELECT;
+    }
+
+    public static hasArgPlaceholder(type: string): boolean {
+        return type == FieldType.EMAIL || type == FieldType.TEXT;
     }
 }

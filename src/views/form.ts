@@ -77,7 +77,7 @@ export class Form {
         $('button', {
             innerText: 'save',
             onclick: () => {
-                const fieldType = App.getFieldType(type);
+                const fieldType = App.getFieldConstructor(type);
                 if (hasArgPlaceholder) {
                     this.$fields.push(new fieldType(label.value, value.value, placeholder.value));
                 }

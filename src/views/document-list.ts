@@ -41,6 +41,5 @@ export class DocumentList {
         });
         context = context || App.getDefaultRenderingContext();
         context.append(table);
-        context.append($('p', {innerText: 'chuj'}))
     }
 }
