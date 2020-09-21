@@ -44,7 +44,7 @@ export abstract class FieldTemplate implements Field {
         context = context || App.getDefaultRenderingContext();
 
         const container = $('div');
-        container.append(this.$element, this.$label);
+        container.append(this.$label, this.$element);
         context.append(container);
 
         return this;
